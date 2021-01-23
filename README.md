@@ -9,6 +9,16 @@ If you need specific gammu settings to be added, feel free to open a PR or an is
 
 ![Diagram](diagram.svg)
 
+default {prefix} is sms2mqtt.  
+To send SMS, you need to publish this payload to topic "sms2mqtt/send" : 
+   {"Number":"+33612345678", "Text":"This is a test message"}
+
+SMS is sent and then a confirmation is send back through MQTT to topic "sms2mqtt/sent" : 
+   {"Result":"Success", "DateTime":"2021-01-23 13:00:00", "Number":"+33612345678", "Text":"This is a test message"}
+
+Received SMS are published to topic "sms2mqtt/received"like this : 
+   {"DateTime":"2021-01-23 13:30:00", "Number":"+31415926535", "Text":"Hi, Be the Pi with you"}
+
 # How-to
 Run by executing the following commmand:
 
