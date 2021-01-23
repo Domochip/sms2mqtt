@@ -59,7 +59,7 @@ def loop_sms_receive():
     if remain > 0: logging.info(f'{remain} SMS received')
     while remain > 0:
         sms = gammusm.GetNextSMS(Folder=0, Start=True)
-        message = {"Number":sms[0]['Number'], "Text":sms[0]['Text'], "DateTime":str(sms[0]['DateTime'])}
+        message = {"DateTime":str(sms[0]['DateTime']), "Number":sms[0]['Number'], "Text":sms[0]['Text']}
         payload = json.dumps(message)
         client.publish(f"{mqttprefix}/received", payload)
         logging.info(payload)
