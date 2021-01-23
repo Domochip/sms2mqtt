@@ -1,9 +1,9 @@
 # Prerequisites
 
-You need a GSM dongle "compatible" with Gammu : https://wammu.eu/phones/
+You need a GSM dongle "compatible" with Gammu : https://wammu.eu/phones/  
 Even if your dongle is not listed, it should works with.
 
-if you need specific gammu settings to be added, feel free to open a PR or an issue
+If you need specific gammu settings to be added, feel free to open a PR or an issue.
 
 # How does it works
 
