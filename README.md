@@ -7,7 +7,7 @@ If you need specific gammu settings to be added, feel free to open a PR or an is
 
 # How does it work
 
-TODO graph
+![Diagram](diagram.svg)
 
 # How-to
 Run by executing the following commmand:
