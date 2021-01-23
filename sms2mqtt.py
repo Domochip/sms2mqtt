@@ -21,14 +21,14 @@ def on_mqtt_message(client, userdata, msg):
     except Exception as e:
         logging.error(f'failed to decode JSON, reason: {e}, string: {msg.payload}')
 
-    text = data.get('text', None)
-    if not text:
-        logging.error('no text body to send')
-        return False
-
-    number = data.get('number', None)
+    number = data.get('Number', None)
     if not number:
         logging.error('no number to send to')
+        return False
+
+    text = data.get('Text', None)
+    if not text:
+        logging.error('no text body to send')
         return False
 
     for num in (number.split(";")):
