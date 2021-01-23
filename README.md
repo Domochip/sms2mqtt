@@ -25,7 +25,7 @@ docker run \
     domochip/sms2mqtt
 ```
 
-## Parameters explanation
+### Parameters explanation
 * `--device=/dev/ttyUSB0:/dev/mobile`: Location of GSM dongle (replace /dev/ttyUSB0 with yours), it need to be mapped to /dev/mobile
 * `-e PIN="1234"`: **Optional**, Pin code of your SIM
 * `-e HOST="192.168.1.x"`: IP address or hostname of your MQTT broker
@@ -45,6 +45,9 @@ To send SMS:
 * SMS is sent  
 * A confirmation is send back through MQTT to topic **sms2mqtt/sent** :  
 `{"Result":"Success", "DateTime":"2021-01-23 13:00:00", "Number":"+33612345678", "Text":"This is a test message"}`  
+
+You can send SMS to multiple Numbers using comma seperated list.  
+A confirmation will be sent back for each numbers.
 
 ## Receive
 
