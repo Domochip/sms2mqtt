@@ -32,6 +32,8 @@ def on_mqtt_message(client, userdata, msg):
         return False
 
     for num in (number.split(",")):
+        if num == '':
+            continue
         message = {
             'Text': f'{text}',
             'SMSC': {'Location': 1},
