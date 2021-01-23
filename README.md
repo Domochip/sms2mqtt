@@ -7,7 +7,7 @@ If you need specific gammu settings to be added, feel free to open a PR or an is
 
 # How does it work
 
-![Diagram](https://github.com/Domochip/sms2mqtt/blob/master/diagram.svg)
+![Diagram](https://raw.githubusercontent.com/Domochip/sms2mqtt/master/diagram.svg)
 
 # How-to
 
