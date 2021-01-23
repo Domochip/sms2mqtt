@@ -5,7 +5,7 @@ Even if your dongle is not listed, it should works with.
 
 If you need specific gammu settings to be added, feel free to open a PR or an issue.
 
-# How does it works
+# How does it work
 
 TODO graph
 
@@ -18,13 +18,13 @@ docker run \
     --name sms2mqtt \
     --restart=always \
     --device=/dev/ttyUSB0:/dev/mobile \
-    -e PIN="1234"
-    -e HOST="192.168.1.x"
-    -e PORT=1883
-    -e PREFIX="sms2mqtt"
-    -e CLIENTID="sms2mqttclid"
-    -e USER="usr"
-    -e PASSWORD="pass"
+    -e PIN="1234" \
+    -e HOST="192.168.1.x" \
+    -e PORT=1883 \
+    -e PREFIX="sms2mqtt" \
+    -e CLIENTID="sms2mqttclid" \
+    -e USER="usr" \
+    -e PASSWORD="pass" \
     domochip/sms2mqtt
 ```
 
