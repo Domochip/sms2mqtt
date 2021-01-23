@@ -31,7 +31,7 @@ def on_mqtt_message(client, userdata, msg):
         logging.error('no number to send to')
         return False
 
-    for num in (number.split(",")):
+    for num in (number.split(";")):
         if num == '':
             continue
         message = {
