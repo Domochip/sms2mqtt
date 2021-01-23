@@ -9,23 +9,10 @@ If you need specific gammu settings to be added, feel free to open a PR or an is
 
 ![Diagram](diagram.svg)
 
-## Send
-
-The default {prefix} for topics is sms2mqtt.  
-
-To send SMS: 
-* Publish this payload to topic "sms2mqtt/send" :  
-`{"Number":"+33612345678", "Text":"This is a test message"}`  
-* SMS is sent  
-* A confirmation is send back through MQTT to topic "sms2mqtt/sent" :  
-`{"Result":"Success", "DateTime":"2021-01-23 13:00:00", "Number":"+33612345678", "Text":"This is a test message"}`  
-
-## Receive
-
-Received SMS are published to topic "sms2mqtt/received"like this : 
-   {"DateTime":"2021-01-23 13:30:00", "Number":"+31415926535", "Text":"Hi, Be the Pi with you"}
-
 # How-to
+
+## Install
+
 Run by executing the following commmand:
 
 ```bash
@@ -53,6 +40,23 @@ docker run \
 * `-e CLIENTID="sms2mqttclid"`: Optional, MQTT client id to use
 * `-e USER="usr"`: Optional, MQTT user name
 * `-e PASSWORD="pass"`: Optional, MQTT password
+
+## Send
+
+The default {prefix} for topics is sms2mqtt.  
+
+To send SMS: 
+* Publish this payload to topic *sms2mqtt/send* :  
+`{"Number":"+33612345678", "Text":"This is a test message"}`  
+* SMS is sent  
+* A confirmation is send back through MQTT to topic *sms2mqtt/sent* :  
+`{"Result":"Success", "DateTime":"2021-01-23 13:00:00", "Number":"+33612345678", "Text":"This is a test message"}`  
+
+## Receive
+
+Received SMS are published to topic *sms2mqtt/received* like this :  
+`{"DateTime":"2021-01-23 13:30:00", "Number":"+31415926535", "Text":"Hi, Be the Pi with you"}`
+
 
 # Updating
 To update to the latest Docker image:
