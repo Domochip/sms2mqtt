@@ -104,6 +104,9 @@ connection = at
     gammusm.ReadConfig(Filename="/app/gammurc")
     gammusm.Init()
 
+    if gammusm.GetSecurityStatus() == 'PIN':
+        gammusm.EnterSecurityCode('PIN',pincode)
+
     logging.info('Gammu initialized')
 
     client = mqtt.Client(mqttclientid, mqttport)
