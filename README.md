@@ -66,5 +66,5 @@ docker rmi domochip/sms2mqtt
 # Ref/Thanks
 
 I want to thanks those repositories for their codes that inspired me :  
-* https://github.com/pajikos/sms-gammu-gateway : I have a Huawei dongle and I found out that gammu 1.39 works fine with it :ok_hand:
+* https://github.com/pajikos/sms-gammu-gateway : I have a Huawei dongle and I found out that gammu 1.39 works fine with it 👌
 * https://github.com/pkropf/mqtt2sms 
