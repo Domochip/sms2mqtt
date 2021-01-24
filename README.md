@@ -39,14 +39,16 @@ docker run \
 The default {prefix} for topics is sms2mqtt.  
 
 To send SMS: 
-* Publish this payload to topic **sms2mqtt/send** :  
+1. Publish this payload to topic **sms2mqtt/send** :  
 `{"number":"+33612345678", "text":"This is a test message"}`  
-* SMS is sent  
-* A confirmation is send back through MQTT to topic **sms2mqtt/sent** :  
+2. SMS is sent  
+3. A confirmation is send back through MQTT to topic **sms2mqtt/sent** :  
 `{"result":"success", "datetime":"2021-01-23 13:00:00", "number":"+33612345678", "text":"This is a test message"}`  
-
-You can send SMS to multiple Numbers using semicolon (;) seperated list.  
-A confirmation will be sent back for each numbers.
+  
+- [x] You can send SMS to multiple Numbers using semicolon (;) seperated list. A confirmation will be sent back for each numbers.
+- [x] You cand send very long messages (more than 160 char).
+- [X] You can send unicode messages containing emoji like : `{"number":"+33612345678", "text":"It's work fine 👌"}`
+- [X] You can send very long messages containing emoji
 
 ## Receive
 

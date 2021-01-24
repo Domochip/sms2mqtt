@@ -38,20 +38,27 @@ def on_mqtt_message(client, userdata, msg):
     for num in (number.split(";")):
         if num == '':
             continue
-        message = {
-            'Text': f'{text}',
-            'SMSC': {'Location': 1},
-            'Number': f'{num}'
+
+        smsinfo = {
+            'Class': -1,
+            'Entries': [{
+                'ID': 'ConcatenatedAutoTextLong',
+                'Buffer' : text
+            }]
         }
 
         try:
             logging.info(f'Sending SMS To {num} containing {text}')
-            gammusm.SendSMS(message)
-            feedback = {"result":"success", "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":message['Number'], "text":message['Text']}
+            encoded = gammu.EncodeSMS(smsinfo)
+            for message in encoded:
+                message['SMSC'] = {'Location': 1}
+                message['Number'] = num
+                gammusm.SendSMS(message)
+            feedback = {"result":"success", "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":num, "text":text}
             client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
             logging.info(f'SMS sent to {num}')
         except Exception as e:
-            feedback = {"result":f'error : {e}', "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":message['Number'], "text":message['Text']}
+            feedback = {"result":f'error : {e}', "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":num, "text":text}
             client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
             logging.error(feedback['Result'])
 
