@@ -21,12 +21,16 @@ def on_mqtt_message(client, userdata, msg):
     except Exception as e:
         logging.error(f'failed to decode JSON, reason: {e}, string: {msg.payload}')
 
-    number = data.get('Number', None)
+    for key, value in data.items():
+        if key.lower() == 'number':
+            number=value
+        if key.lower() == 'text':
+            text=value
+
     if not number:
         logging.error('no number to send to')
         return False
 
-    text = data.get('Text', None)
     if not text:
         logging.error('no text body to send')
         return False
@@ -39,9 +43,9 @@ def on_mqtt_message(client, userdata, msg):
             'SMSC': {'Location': 1},
             'Number': f'{num}'
         }
-        feedback = {"Result":"Success", "DateTime":str(time.localtime()), "Number":message['Number'], "Text":message['Text']}
+
         try:
-            logging.info(f'Sending SMS')
+            logging.info(f'Sending SMS To {num} containing {text}')
             gammusm.SendSMS(message)
             feedback = {"Result":"Success", "DateTime":time.strftime("%Y-%m-%d %H:%M:%S"), "Number":message['Number'], "Text":message['Text']}
             client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
