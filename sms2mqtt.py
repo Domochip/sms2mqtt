@@ -36,6 +36,7 @@ def on_mqtt_message(client, userdata, msg):
         return False
 
     for num in (number.split(";")):
+        num = num.replace(' ','')
         if num == '':
             continue
 
@@ -60,7 +61,7 @@ def on_mqtt_message(client, userdata, msg):
         except Exception as e:
             feedback = {"result":f'error : {e}', "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":num, "text":text}
             client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
-            logging.error(feedback['Result'])
+            logging.error(feedback['result'])
 
 # function used to parse received sms
 def loop_sms_receive():
