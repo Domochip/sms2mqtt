@@ -84,6 +84,10 @@ def loop_sms_receive():
 if __name__ == "__main__":
     logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
 
+    versionnumber='1.1.0'
+
+    logging.info(f'===== sms2mqtt v{versionnumber} =====')
+
     # devmode is used to start container but not the code itself, then you can connect interactively and run this script by yourself
     # docker exec -it sms2mqtt /bin/sh
     if os.getenv("DEVMODE",0) == "1":
