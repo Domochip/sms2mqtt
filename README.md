@@ -10,7 +10,6 @@ If you need specific gammu settings to be added, feel free to open a PR or an is
 ![Diagram](https://raw.githubusercontent.com/Domochip/sms2mqtt/master/diagram.svg)
 
 # How-to
-
 ## Install
 
 Run by executing the following commmand:
@@ -54,6 +53,10 @@ A confirmation will be sent back for each numbers.
 Received SMS are published to topic **sms2mqtt/received** like this :  
 `{"datetime":"2021-01-23 13:30:00", "number":"+31415926535", "text":"Hi, Be the Pi with you"}`
 
+# Troubleshoot
+## Logs
+You need to have a look at logs using :  
+`docker logs sms2mqtt`
 
 # Updating
 To update to the latest Docker image:
