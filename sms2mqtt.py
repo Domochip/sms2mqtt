@@ -47,11 +47,11 @@ def on_mqtt_message(client, userdata, msg):
         try:
             logging.info(f'Sending SMS To {num} containing {text}')
             gammusm.SendSMS(message)
-            feedback = {"Result":"Success", "DateTime":time.strftime("%Y-%m-%d %H:%M:%S"), "Number":message['Number'], "Text":message['Text']}
+            feedback = {"result":"success", "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":message['Number'], "text":message['Text']}
             client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
             logging.info(f'SMS sent to {num}')
         except Exception as e:
-            feedback = {"Result":f'Error : {e}', "DateTime":time.strftime("%Y-%m-%d %H:%M:%S"), "Number":message['Number'], "Text":message['Text']}
+            feedback = {"result":f'error : {e}', "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":message['Number'], "text":message['Text']}
             client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
             logging.error(feedback['Result'])
 
@@ -65,7 +65,7 @@ def loop_sms_receive():
     if remain > 0: logging.info(f'{remain} SMS received')
     while remain > 0:
         sms = gammusm.GetNextSMS(Folder=0, Start=True)
-        message = {"DateTime":str(sms[0]['DateTime']), "Number":sms[0]['Number'], "Text":sms[0]['Text']}
+        message = {"datetime":str(sms[0]['DateTime']), "number":sms[0]['Number'], "text":sms[0]['Text']}
         payload = json.dumps(message)
         client.publish(f"{mqttprefix}/received", payload)
         logging.info(payload)
