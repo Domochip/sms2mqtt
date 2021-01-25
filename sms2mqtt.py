@@ -74,18 +74,25 @@ def on_mqtt_message(client, userdata, msg):
 def loop_sms_receive():
 
     # process Received SMS
-    status = gammusm.GetSMSStatus()
-    remain = status['SIMUsed'] + status['PhoneUsed'] + status['TemplatesUsed']
-    # logging.info(f"SIMUsed : {status['SIMUsed']}, PhoneUsed : {status['PhoneUsed']}, TemplatesUsed : {status['TemplatesUsed']}")
-    if remain > 0: logging.info(f'{remain} SMS received')
-    while remain > 0:
-        sms = gammusm.GetNextSMS(Folder=0, Start=True)
-        message = {"datetime":str(sms[0]['DateTime']), "number":sms[0]['Number'], "text":sms[0]['Text']}
+    allsms = []
+    start=True
+    while True:
+        try:
+            if start:
+                sms = gammusm.GetNextSMS(Folder=0, Start=True)
+                start=False
+            else:
+                sms = gammusm.GetNextSMS(Folder=0, Location=sms[0]['Location'])
+            allsms.append(sms[0])
+        except gammu.ERR_EMPTY as e:
+            break
+
+    for sms in allsms:
+        message = {"datetime":str(sms['DateTime']), "number":sms['Number'], "text":sms['Text']}
         payload = json.dumps(message, ensure_ascii=False)
         client.publish(f"{mqttprefix}/received", payload)
         logging.info(payload)
-        gammusm.DeleteSMS(Folder=0, Location=sms[0]['Location'])
-        remain -= 1
+        gammusm.DeleteSMS(Folder=0, Location=sms['Location'])
 
 
 if __name__ == "__main__":
