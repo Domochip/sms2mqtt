@@ -83,16 +83,24 @@ def loop_sms_receive():
                 start=False
             else:
                 sms = gammusm.GetNextSMS(Folder=0, Location=sms[0]['Location'])
-            allsms.append(sms[0])
+            allsms.append(sms)
         except gammu.ERR_EMPTY as e:
             break
 
+    if not len(allsms):
+        return
+    
+    alllinkedsms=gammu.LinkSMS(allsms)
+
+    logging.info(f'{len(alllinkedsms)} SMS received')
+
     for sms in allsms:
-        message = {"datetime":str(sms['DateTime']), "number":sms['Number'], "text":sms['Text']}
-        payload = json.dumps(message, ensure_ascii=False)
-        client.publish(f"{mqttprefix}/received", payload)
-        logging.info(payload)
-        gammusm.DeleteSMS(Folder=0, Location=sms['Location'])
+        if sms[0]['UDH']['Type'] == 'NoUDH' or sms[0]['UDH']['AllParts'] == -1:
+            message = {"datetime":str(sms[0]['DateTime']), "number":sms[0]['Number'], "text":sms[0]['Text']}
+            payload = json.dumps(message, ensure_ascii=False)
+            client.publish(f"{mqttprefix}/received", payload)
+            logging.info(payload)
+            gammusm.DeleteSMS(Folder=0, Location=sms[0]['Location'])
 
 
 if __name__ == "__main__":
