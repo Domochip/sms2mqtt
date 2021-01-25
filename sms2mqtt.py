@@ -27,11 +27,11 @@ def on_mqtt_message(client, userdata, msg):
         if key.lower() == 'text':
             text=value
 
-    if not number:
+    if 'number' not in locals() or not isinstance(number, str):
         logging.error('no number to send to')
         return False
 
-    if not text:
+    if 'text' not in locals() or not isinstance(text, str):
         logging.error('no text body to send')
         return False
 
