@@ -19,7 +19,10 @@ def on_mqtt_message(client, userdata, msg):
         payload = msg.payload.decode("utf-8")
         data = json.loads(payload, strict=False)
     except Exception as e:
-        logging.error(f'failed to decode JSON, reason: {e}, string: {msg.payload}')
+        feedback = {"result":f'error : failed to decode JSON ({e})', "payload":payload}
+        client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
+        logging.error(f'failed to decode JSON ({e}), payload: {msg.payload}')
+        return
 
     for key, value in data.items():
         if key.lower() == 'number':
@@ -27,11 +30,15 @@ def on_mqtt_message(client, userdata, msg):
         if key.lower() == 'text':
             text=value
 
-    if 'number' not in locals() or not isinstance(number, str):
+    if 'number' not in locals() or not isinstance(number, str) or not number:
+        feedback = {"result":'error : no number to send to', "payload":payload}
+        client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
         logging.error('no number to send to')
         return False
 
     if 'text' not in locals() or not isinstance(text, str):
+        feedback = {"result":'error : no text body to send', "payload":payload}
+        client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
         logging.error('no text body to send')
         return False
 
