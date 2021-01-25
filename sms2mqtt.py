@@ -20,7 +20,7 @@ def on_mqtt_message(client, userdata, msg):
         data = json.loads(payload, strict=False)
     except Exception as e:
         feedback = {"result":f'error : failed to decode JSON ({e})', "payload":payload}
-        client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
+        client.publish(f"{mqttprefix}/sent", json.dumps(feedback, ensure_ascii=False))
         logging.error(f'failed to decode JSON ({e}), payload: {msg.payload}')
         return
 
@@ -32,13 +32,13 @@ def on_mqtt_message(client, userdata, msg):
 
     if 'number' not in locals() or not isinstance(number, str) or not number:
         feedback = {"result":'error : no number to send to', "payload":payload}
-        client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
+        client.publish(f"{mqttprefix}/sent", json.dumps(feedback, ensure_ascii=False))
         logging.error('no number to send to')
         return False
 
     if 'text' not in locals() or not isinstance(text, str):
         feedback = {"result":'error : no text body to send', "payload":payload}
-        client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
+        client.publish(f"{mqttprefix}/sent", json.dumps(feedback, ensure_ascii=False))
         logging.error('no text body to send')
         return False
 
@@ -63,11 +63,11 @@ def on_mqtt_message(client, userdata, msg):
                 message['Number'] = num
                 gammusm.SendSMS(message)
             feedback = {"result":"success", "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":num, "text":text}
-            client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
+            client.publish(f"{mqttprefix}/sent", json.dumps(feedback, ensure_ascii=False))
             logging.info(f'SMS sent to {num}')
         except Exception as e:
             feedback = {"result":f'error : {e}', "datetime":time.strftime("%Y-%m-%d %H:%M:%S"), "number":num, "text":text}
-            client.publish(f"{mqttprefix}/sent", json.dumps(feedback))
+            client.publish(f"{mqttprefix}/sent", json.dumps(feedback, ensure_ascii=False))
             logging.error(feedback['result'])
 
 # function used to parse received sms
@@ -81,7 +81,7 @@ def loop_sms_receive():
     while remain > 0:
         sms = gammusm.GetNextSMS(Folder=0, Start=True)
         message = {"datetime":str(sms[0]['DateTime']), "number":sms[0]['Number'], "text":sms[0]['Text']}
-        payload = json.dumps(message)
+        payload = json.dumps(message, ensure_ascii=False)
         client.publish(f"{mqttprefix}/received", payload)
         logging.info(payload)
         gammusm.DeleteSMS(Folder=0, Location=sms[0]['Location'])
