@@ -45,15 +45,18 @@ To send SMS:
 3. A confirmation is send back through MQTT to topic **sms2mqtt/sent** :  
 `{"result":"success", "datetime":"2021-01-23 13:00:00", "number":"+33612345678", "text":"This is a test message"}`  
   
-- ✅ You can send SMS to multiple Numbers using semicolon (;) seperated list. A confirmation will be sent back for each numbers.
-- ✅ You cand send very long messages (more than 160 char).
-- ✅ You can send unicode messages containing emoji like : `{"number":"+33612345678", "text":"It's work fine 👌"}`
-- ✅ You can send very long messages containing emoji
+- ✔️ You can send SMS to multiple Numbers using semicolon (;) seperated list. A confirmation will be sent back for each numbers.
+- ✔️ You cand send very long messages (more than 160 char).
+- ✔️ You can send unicode messages containing emoji like : `{"number":"+33612345678", "text":"It's work fine 👌"}`
+- ✔️ You can send very long messages containing emoji
 
 ## Receive
 
 Received SMS are published to topic **sms2mqtt/received** like this :  
-`{"datetime":"2021-01-23 13:30:00", "number":"+31415926535", "text":"Hi, Be the Pi with you"}`
+`{"datetime":"2021-01-23 13:30:00", "number":"+31415926535", "text":"Hi, Be the Pi with you"}`  
+
+- ✔️ You can receive long SMS messages
+- ❌ You can't receive any MMS
 
 # Troubleshoot
 ## Logs
