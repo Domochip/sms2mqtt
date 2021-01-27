@@ -92,21 +92,41 @@ def loop_sms_receive():
     
     alllinkedsms=gammu.LinkSMS(allsms)
 
-    logging.info(f'{len(alllinkedsms)} SMS received')
-
-    for sms in allsms:
-        if sms[0]['UDH']['Type'] == 'NoUDH' or sms[0]['UDH']['AllParts'] == -1:
+    for sms in alllinkedsms:
+        if sms[0]['UDH']['Type'] == 'NoUDH':
             message = {"datetime":str(sms[0]['DateTime']), "number":sms[0]['Number'], "text":sms[0]['Text']}
             payload = json.dumps(message, ensure_ascii=False)
             client.publish(f"{mqttprefix}/received", payload)
             logging.info(payload)
             gammusm.DeleteSMS(Folder=0, Location=sms[0]['Location'])
+        elif sms[0]['UDH']['AllParts'] != -1:
+            if len(sms) == sms[0]['UDH']['AllParts']:
+                decodedsms = gammu.DecodeSMS(sms)
+                message = {"datetime":str(sms[0]['DateTime']), "number":sms[0]['Number'], "text":decodedsms['Entries'][0]['Buffer']}
+                payload = json.dumps(message, ensure_ascii=False)
+                client.publish(f"{mqttprefix}/received", payload)
+                logging.info(payload)
+                for part in sms:
+                    gammusm.DeleteSMS(Folder=0, Location=part['Location'])
+            else:
+                logging.info(f"Incomplete Multipart SMS ({len(sms)}/{sms[0]['UDH']['AllParts']}): waiting for parts")
+        else:
+            logging.info('***************** Unsupported SMS type *****************')
+            logging.info('===============sms=================')
+            logging.info(sms)
+            logging.info('===============decodedsms=================')
+            decodedsms = gammu.DecodeSMS(sms)
+            logging.info(decodedsms)
+            logging.info('================================')
+            gammusm.DeleteSMS(Folder=0, Location=sms[0]['Location'])
+            
+            
 
 
 if __name__ == "__main__":
     logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
 
-    versionnumber='1.1.0'
+    versionnumber='1.3.0'
 
     logging.info(f'===== sms2mqtt v{versionnumber} =====')
 
