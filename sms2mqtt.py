@@ -186,7 +186,7 @@ connection = at
     client.on_message = on_mqtt_message
     client.will_set(f"{mqttprefix}/connected", "0", 0, True)
     client.connect(mqtthost)
-        
+
     run = True
     while run:
         time.sleep(1)
