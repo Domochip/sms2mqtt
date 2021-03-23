@@ -120,8 +120,19 @@ def loop_sms_receive():
             logging.info('================================')
             gammusm.DeleteSMS(Folder=0, Location=sms[0]['Location'])
             
-            
+# function used to obtain signal quality        
+def get_signal_info():
+    global old_signal_info
+    try:
+        signal_info = gammusm.GetSignalQuality()
+        if signal_info != old_signal_info:
+            signal_payload = json.dumps(signal_info)
+            client.publish(f"{mqttprefix}/signal", signal_payload)
+            old_signal_info = signal_info
+    except:
+        logging.error("Unable to check signal quality")
 
+old_signal_info = ""
 
 if __name__ == "__main__":
     logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
@@ -175,9 +186,10 @@ connection = at
     client.on_message = on_mqtt_message
     client.will_set(f"{mqttprefix}/connected", "0", 0, True)
     client.connect(mqtthost)
-    
+        
     run = True
     while run:
         time.sleep(1)
         loop_sms_receive()
+        get_signal_info()
         client.loop()
