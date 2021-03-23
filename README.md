@@ -34,6 +34,28 @@ docker run \
 * `-e USER="usr"`: **Optional**, MQTT user name
 * `-e PASSWORD="pass"`: **Optional**, MQTT password
 
+*NOTE: The `/dev/ttyUSBx` path for your GSM modem could change on reboot, so it's recommended to use the `/dev/serial/by-id/` path instead to avoid this issue.*
+
+Example Docker Compose file with all possible environmental variables listed:
+```yaml
+version: '3'
+services:
+  sms2mqtt:
+    container_name: sms2mqtt
+    image: domochip/sms2mqtt
+    devices:
+    - /dev/serial/by-id/usb-HUAWEI_HUAWEI_Mobile-if00-port0:/dev/mobile
+    environment:
+    - PIN=1234
+    - HOST=10.0.0.2
+    - PORT=1883
+    - PREFIX=sms2mqtt
+    - CLIENTID=sms2mqttclid
+    - USER=mqtt_username
+    - PASSWORD=mqtt_password
+    restart: always
+```
+
 ## Send
 
 The default {prefix} for topics is sms2mqtt.  
