@@ -11,8 +11,7 @@ If you need specific gammu settings to be added, feel free to open a PR or an is
 
 # How-to
 ## Install
-
-Run by executing the following commmand:
+For Docker, run it by executing the following commmand:
 
 ```bash
 docker run \
@@ -20,23 +19,17 @@ docker run \
     --name sms2mqtt \
     --restart=always \
     --device=/dev/ttyUSB0:/dev/mobile \
+    -e PIN="1234" \
     -e HOST="192.168.1.x" \
+    -e PORT=1883 \
+    -e PREFIX="sms2mqtt" \
+    -e CLIENTID="sms2mqttclid" \
+    -e USER="usr" \
+    -e PASSWORD="pass" \
     domochip/sms2mqtt
 ```
+For Docker-Compose, use the following yaml:
 
-### Parameters explanation
-* `--device=/dev/ttyUSB0:/dev/mobile`: Location of GSM dongle (replace /dev/ttyUSB0 with yours), it need to be mapped to /dev/mobile
-* `-e PIN="1234"`: **Optional**, Pin code of your SIM
-* `-e HOST="192.168.1.x"`: IP address or hostname of your MQTT broker
-* `-e PORT=1883`: **Optional**, port of your MQTT broker
-* `-e PREFIX="sms2mqtt"`: **Optional**, prefix used in topics for subscribe/publish
-* `-e CLIENTID="sms2mqttclid"`: **Optional**, MQTT client id to use
-* `-e USER="usr"`: **Optional**, MQTT user name
-* `-e PASSWORD="pass"`: **Optional**, MQTT password
-
-*NOTE: The `/dev/ttyUSBx` path for your GSM modem could change on reboot, so it's recommended to use the `/dev/serial/by-id/` path instead to avoid this issue.*
-
-Example Docker Compose file with all possible environmental variables listed:
 ```yaml
 version: '3'
 services:
@@ -56,6 +49,22 @@ services:
     restart: always
 ```
 
+## Configure
+
+#### Device
+* `device`: Location of GSM dongle (replace /dev/ttyUSB0 with yours), it need to be mapped to /dev/mobile
+
+*NOTE: The `/dev/ttyUSBx` path of your GSM modem could change on reboot, so it's recommended to use the `/dev/serial/by-id/` path or symlink udev rules to avoid this issue.*
+
+#### Environment variables
+* `PIN`: **Optional**, Pin code of your SIM
+* `HOST`: IP address or hostname of your MQTT broker
+* `PORT`: **Optional**, port of your MQTT broker
+* `PREFIX`: **Optional**, prefix used in topics for subscribe/publish
+* `CLIENTID`: **Optional**, MQTT client id to use
+* `USER`: **Optional**, MQTT username
+* `PASSWORD`: **Optional**, MQTT password
+
 ## Send
 
 The default {prefix} for topics is sms2mqtt.  
@@ -69,7 +78,7 @@ To send SMS:
   
 - ✔️ You can send SMS to multiple Numbers using semicolon (;) seperated list. A confirmation will be sent back for each numbers.
 - ✔️ You cand send very long messages (more than 160 char).
-- ✔️ You can send unicode messages containing emoji like : `{"number":"+33612345678", "text":"It's work fine 👌"}`
+- ✔️ You can send unicode messages containing emoji like : `{"number":"+33612345678", "text":"It's working fine 👌"}`
 - ✔️ You can send very long messages containing emoji
 
 ## Receive
