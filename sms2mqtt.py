@@ -6,13 +6,19 @@ import gammu
 import json
 
 
-# The callback for when the client receives a CONNACK response from the server.
+# callback when the broker responds to our connection request.
 def on_mqtt_connect(client, userdata, flags, rc):
     logging.info("Connected to MQTT host")
     client.publish(f"{mqttprefix}/connected", "1", 0, True)
     client.subscribe(f"{mqttprefix}/send")
 
-# The callback for when a PUBLISH message is received from the server.
+# callback when the client disconnects from the broker.
+def on_mqtt_disconnect(client, userdata, rc):
+    logging.info("Disconnected from MQTT host")
+    logging.info("Exit")
+    exit()
+
+# callback when a message has been received on a topic that the client subscribes to.
 def on_mqtt_message(client, userdata, msg):
     try:
         logging.info(f'MQTT received : {msg.payload}')
@@ -137,7 +143,7 @@ old_signal_info = ""
 if __name__ == "__main__":
     logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
 
-    versionnumber='1.3.1'
+    versionnumber='1.4.0'
 
     logging.info(f'===== sms2mqtt v{versionnumber} =====')
 
@@ -183,6 +189,7 @@ connection = at
     client = mqtt.Client(mqttclientid, mqttport)
     client.username_pw_set(mqttuser, mqttpassword)
     client.on_connect = on_mqtt_connect
+    client.on_disconnect = on_mqtt_disconnect
     client.on_message = on_mqtt_message
     client.will_set(f"{mqttprefix}/connected", "0", 0, True)
     client.connect(mqtthost)
