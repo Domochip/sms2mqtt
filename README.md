@@ -91,7 +91,7 @@ Received SMS are published to topic **sms2mqtt/received** like this :
 
 ## Other topic
 
-- **sms2mqtt/signal**: A signal quality payload is sent to mqtt subscribers when quality change
+- **sms2mqtt/signal**: A signal quality payload is published when quality change  
  E.g. `{"SignalStrength": -71, "SignalPercent": 63, "BitErrorRate": -1}`
 
 # Troubleshoot
