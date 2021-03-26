@@ -49,7 +49,7 @@ services:
     restart: always
 ```
 
-## Configure
+### Configure
 
 #### Device
 * `device`: Location of GSM dongle (replace /dev/ttyUSB0 with yours), it need to be mapped to /dev/mobile
@@ -88,6 +88,11 @@ Received SMS are published to topic **sms2mqtt/received** like this :
 
 - ✔️ You can receive long SMS messages
 - ❌ You can't receive any MMS
+
+## Other topic
+
+- **sms2mqtt/signal**: A signal quality payload is sent to mqtt subscribers when quality change
+ E.g. `{"SignalStrength": -71, "SignalPercent": 63, "BitErrorRate": -1}`
 
 # Troubleshoot
 ## Logs
