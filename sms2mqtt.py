@@ -143,7 +143,7 @@ old_signal_info = ""
 if __name__ == "__main__":
     logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
 
-    versionnumber='1.4.0'
+    versionnumber='1.4.1'
 
     logging.info(f'===== sms2mqtt v{versionnumber} =====')
 
@@ -186,13 +186,13 @@ connection = at
 
     logging.info('Gammu initialized')
 
-    client = mqtt.Client(mqttclientid, mqttport)
+    client = mqtt.Client(mqttclientid)
     client.username_pw_set(mqttuser, mqttpassword)
     client.on_connect = on_mqtt_connect
     client.on_disconnect = on_mqtt_disconnect
     client.on_message = on_mqtt_message
     client.will_set(f"{mqttprefix}/connected", "0", 0, True)
-    client.connect(mqtthost)
+    client.connect(mqtthost, mqttport)
 
     run = True
     while run:
