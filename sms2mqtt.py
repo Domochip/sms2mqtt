@@ -1,6 +1,7 @@
 import logging
 import time
 import os
+import signal
 import paho.mqtt.client as mqtt
 import gammu
 import json
