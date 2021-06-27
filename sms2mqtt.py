@@ -194,8 +194,7 @@ connection = at
     client.will_set(f"{mqttprefix}/connected", "0", 0, True)
     client.connect(mqtthost, mqttport)
 
-    run = True
-    while run:
+    while True:
         time.sleep(1)
         loop_sms_receive()
         get_signal_info()
