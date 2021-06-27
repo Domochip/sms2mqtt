@@ -140,6 +140,10 @@ def get_signal_info():
 
 old_signal_info = ""
 
+def shutdown(signum=None, frame=None):
+    client.disconnect()
+
+
 if __name__ == "__main__":
     logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
 
@@ -168,6 +172,9 @@ if __name__ == "__main__":
     mqttclientid = os.getenv("CLIENTID","sms2mqtt")
     mqttuser = os.getenv("USER")
     mqttpassword = os.getenv("PASSWORD")
+
+    signal.signal(signal.SIGINT, shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
 
     gammurcfile = open("/app/gammurc", 'w')
     gammurcfile.write(f"""
