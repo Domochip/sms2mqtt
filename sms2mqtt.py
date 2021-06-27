@@ -148,7 +148,7 @@ def shutdown(signum=None, frame=None):
 if __name__ == "__main__":
     logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
 
-    versionnumber='1.4.1'
+    versionnumber='1.4.3'
 
     logging.info(f'===== sms2mqtt v{versionnumber} =====')
 
