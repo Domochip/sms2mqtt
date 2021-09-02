@@ -60,7 +60,7 @@ services:
 * `PIN`: **Optional**, Pin code of your SIM
 * `HOST`: IP address or hostname of your MQTT broker
 * `PORT`: **Optional**, port of your MQTT broker
-* `PREFIX`: **Optional**, prefix used in topics for subscribe/publish
+* `PREFIX`: **Optional**, MQTT prefix used in topics for subscribe/publish
 * `CLIENTID`: **Optional**, MQTT client id to use
 * `USER`: **Optional**, MQTT username
 * `PASSWORD`: **Optional**, MQTT password
@@ -73,21 +73,21 @@ To send SMS:
 1. Publish this payload to topic **sms2mqtt/send** :  
 `{"number":"+33612345678", "text":"This is a test message"}`  
 2. SMS is sent  
-3. A confirmation is send back through MQTT to topic **sms2mqtt/sent** :  
+3. A confirmation is sent back through MQTT to topic **sms2mqtt/sent** :  
 `{"result":"success", "datetime":"2021-01-23 13:00:00", "number":"+33612345678", "text":"This is a test message"}`  
   
-- ✔️ You can send SMS to multiple Numbers using semicolon (;) seperated list. A confirmation will be sent back for each numbers.
-- ✔️ You cand send very long messages (more than 160 char).
-- ✔️ You can send unicode messages containing emoji like : `{"number":"+33612345678", "text":"It's working fine 👌"}`
-- ✔️ You can send very long messages containing emoji
+- ✔️ SMS to multiple Numbers using semicolon (;) seperated list. A confirmation will be sent back for each numbers.
+- ✔️ very long messages (more than 160 char).
+- ✔️ unicode messages containing emoji like : `{"number":"+33612345678", "text":"It's working fine 👌"}`
+- ✔️ very long messages containing emoji
 
 ## Receive
 
 Received SMS are published to topic **sms2mqtt/received** like this :  
 `{"datetime":"2021-01-23 13:30:00", "number":"+31415926535", "text":"Hi, Be the Pi with you"}`  
 
-- ✔️ You can receive long SMS messages
-- ❌ You can't receive any MMS
+- ✔️ long SMS messages
+- ❌ any MMS
 
 ## Other topic
 
