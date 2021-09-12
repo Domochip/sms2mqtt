@@ -105,7 +105,10 @@ def loop_sms_receive():
             payload = json.dumps(message, ensure_ascii=False)
             client.publish(f"{mqttprefix}/received", payload)
             logging.info(payload)
-            gammusm.DeleteSMS(Folder=0, Location=sms[0]['Location'])
+            try:
+                gammusm.DeleteSMS(Folder=0, Location=sms[0]['Location'])
+            except Exception as e:
+                logging.error(f'ERROR: Unable to delete SMS: {e}')
         elif sms[0]['UDH']['AllParts'] != -1:
             if len(sms) == sms[0]['UDH']['AllParts']:
                 decodedsms = gammu.DecodeSMS(sms)
@@ -136,8 +139,8 @@ def get_signal_info():
             signal_payload = json.dumps(signal_info)
             client.publish(f"{mqttprefix}/signal", signal_payload)
             old_signal_info = signal_info
-    except:
-        logging.error("Unable to check signal quality")
+    except Exception as e:
+        logging.error(f'ERROR: Unable to check signal quality: {e}')
 
 old_signal_info = ""
 
@@ -169,7 +172,7 @@ if __name__ == "__main__":
     pincode = os.getenv("PIN")
     mqttprefix = os.getenv("PREFIX","sms2mqtt")
     mqtthost = os.getenv("HOST","localhost")
-    mqttport = os.getenv("PORT",1883)
+    mqttport = int(os.getenv("PORT",1883))
     mqttclientid = os.getenv("CLIENTID","sms2mqtt")
     mqttuser = os.getenv("USER")
     mqttpassword = os.getenv("PASSWORD")
