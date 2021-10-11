@@ -1,5 +1,6 @@
 import logging
 import time
+from datetime import datetime
 import os
 import signal
 import paho.mqtt.client as mqtt
@@ -144,7 +145,49 @@ def get_signal_info():
 
 old_signal_info = ""
 
+# function used to obtain battery charge
+def get_battery_charge():
+    global old_battery_charge
+    try:
+        battery_charge = gammusm.GetBatteryCharge()
+        if battery_charge != old_battery_charge:
+            battery_payload = json.dumps(battery_charge)
+            client.publish(f"{mqttprefix}/battery", battery_payload)
+            old_battery_charge = battery_charge
+    except Exception as e:
+        logging.error(f'ERROR: Unable to check battery charge: {e}')
+
+old_battery_charge = ""
+
+# function used to obtain network info
+def get_network_info():
+    global old_network_info
+    try:
+        network_info = gammusm.GetNetworkInfo()
+        if network_info != old_network_info:
+            network_payload = json.dumps(network_info)
+            client.publish(f"{mqttprefix}/network", network_payload)
+            old_network_info = network_info
+    except Exception as e:
+        logging.error(f'ERROR: Unable to check network info: {e}')
+
+old_network_info = ""
+
+# function used to obtain datetime
+def get_datetime():
+    global old_time
+    try:
+        now = gammusm.GetDateTime().timestamp()
+        if (now - old_time) > 60:
+            client.publish(f"{mqttprefix}/datetime", now)
+            old_time = now
+    except Exception as e:
+        logging.error(f'ERROR: Unable to check datetime: {e}')
+
+old_time = time.time()
+
 def shutdown(signum=None, frame=None):
+    client.publish(f"{mqttprefix}/connected", "0", 0, True)
     client.disconnect()
 
 
@@ -154,7 +197,7 @@ if __name__ == "__main__":
     versionnumber='1.4.4'
 
     logging.info(f'===== sms2mqtt v{versionnumber} =====')
-
+	
     # devmode is used to start container but not the code itself, then you can connect interactively and run this script by yourself
     # docker exec -it sms2mqtt /bin/sh
     if os.getenv("DEVMODE",0) == "1":
@@ -195,6 +238,14 @@ connection = at
     if gammusm.GetSecurityStatus() == 'PIN':
         gammusm.EnterSecurityCode('PIN',pincode)
 
+    gammusm.SetDateTime(datetime.now())
+    versionTuple = gammu.Version()
+    logging.info(f'Gammu runtime: v{versionTuple[0]}')
+    logging.info(f'Python-gammu runtime: v{versionTuple[1]}')
+    logging.info(f'Manufacturer: {gammusm.GetManufacturer()}')
+    logging.info(f'IMEI: {gammusm.GetIMEI()}')
+    logging.info(f'SIMIMSI: {gammusm.GetSIMIMSI()}')    
+
     logging.info('Gammu initialized')
 
     client = mqtt.Client(mqttclientid)
@@ -209,4 +260,7 @@ connection = at
         time.sleep(1)
         loop_sms_receive()
         get_signal_info()
+        get_battery_charge()
+        get_network_info()
+        get_datetime()
         client.loop()
