@@ -10,6 +10,6 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
 
 WORKDIR /app
 
-COPY newsms2mqtt.py .
+COPY sms2mqtt.py .
 
-ENTRYPOINT ["python", "/app/newsms2mqtt.py"]
+ENTRYPOINT ["python", "/app/sms2mqtt.py"]
