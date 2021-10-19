@@ -58,6 +58,8 @@ services:
 
 #### Environment variables
 * `PIN`: **Optional**, Pin code of your SIM
+* `MOREINFO`: **Optional**, Add more topics about your GSM device (battery and network)
+* `HEARTBEAT`: **Optional**, Enable the heartbeat topic
 * `HOST`: IP address or hostname of your MQTT broker
 * `PORT`: **Optional**, port of your MQTT broker
 * `PREFIX`: **Optional**, MQTT prefix used in topics for subscribe/publish
@@ -90,18 +92,22 @@ Received SMS are published to topic **sms2mqtt/received** like this :
 - ❌ any MMS
 
 ## Other topics
+ - **sms2mqtt/connected**: Indicates connection status of the container (0 or 1)  
+ E.g. `1`
 
-- **sms2mqtt/signal**: A signal quality payload is published when quality change
+- **sms2mqtt/signal**: A signal quality payload is published when quality changes  
  E.g. `{"SignalStrength": -71, "SignalPercent": 63, "BitErrorRate": -1}`
 
- - **sms2mqtt/battery**: A payload with information on battery status and charge is published for each change
+### Additionnal topics (enabled using MOREINFO flag)
+ - **sms2mqtt/battery**: A battery payload with status and charge is published when it changes  
  E.g. `{"BatteryPercent": 100, "ChargeState": "BatteryPowered", "BatteryVoltage": -1, "ChargeVoltage": -1, "ChargeCurrent": -1, "PhoneCurrent": -1, "BatteryTemperature": -1, "PhoneTemperature": -1, "BatteryCapacity": -1}`
 
- - **sms2mqtt/network**: A payload with network information is published for each change
+ - **sms2mqtt/network**: A network payload is published when it changes  
  E.g. `{"NetworkName": "", "State": "HomeNetwork", "PacketState": "HomeNetwork", "NetworkCode": "392 11", "CID": "74C5", "PacketCID": "74C5", "GPRS": "Attached", "PacketLAC": "8623", "LAC": "8623"}`
 
- - **sms2mqtt/connected**: Connection status (1 = Connected / 0 = Disconnected)
- E.g. `1`
+### heartbeat topic (enabled using HEARTBEAT flag)
+ - **sms2mqtt/datetime**: A payload containing current timestamp of the GSM device is published for every loop  
+ E.g. `1634671168.531913`
 
 # Troubleshoot
 ## Logs

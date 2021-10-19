@@ -213,6 +213,8 @@ if __name__ == "__main__":
 
     device = os.getenv("DEVICE","/dev/mobile")
     pincode = os.getenv("PIN")
+    moreinfo = bool(os.getenv("MOREINFO"))
+    heartbeat = bool(os.getenv("HEARTBEAT"))
     mqttprefix = os.getenv("PREFIX","sms2mqtt")
     mqtthost = os.getenv("HOST","localhost")
     mqttport = int(os.getenv("PORT",1883))
@@ -238,13 +240,15 @@ connection = at
     if gammusm.GetSecurityStatus() == 'PIN':
         gammusm.EnterSecurityCode('PIN',pincode)
 
-    gammusm.SetDateTime(datetime.now())
     versionTuple = gammu.Version()
     logging.info(f'Gammu runtime: v{versionTuple[0]}')
     logging.info(f'Python-gammu runtime: v{versionTuple[1]}')
     logging.info(f'Manufacturer: {gammusm.GetManufacturer()}')
     logging.info(f'IMEI: {gammusm.GetIMEI()}')
     logging.info(f'SIMIMSI: {gammusm.GetSIMIMSI()}')    
+
+    if heartbeat:
+        gammusm.SetDateTime(datetime.now())
 
     logging.info('Gammu initialized')
 
@@ -260,7 +264,9 @@ connection = at
         time.sleep(1)
         loop_sms_receive()
         get_signal_info()
-        get_battery_charge()
-        get_network_info()
-        get_datetime()
+        if moreinfo:
+            get_battery_charge()
+            get_network_info()
+        if heartbeat:
+            get_datetime()
         client.loop()
