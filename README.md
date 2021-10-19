@@ -89,10 +89,19 @@ Received SMS are published to topic **sms2mqtt/received** like this :
 - ✔️ long SMS messages
 - ❌ any MMS
 
-## Other topic
+## Other topics
 
-- **sms2mqtt/signal**: A signal quality payload is published when quality change  
+- **sms2mqtt/signal**: A signal quality payload is published when quality change
  E.g. `{"SignalStrength": -71, "SignalPercent": 63, "BitErrorRate": -1}`
+
+ - **sms2mqtt/battery**: A payload with information on battery status and charge is published for each change
+ E.g. `{"BatteryPercent": 100, "ChargeState": "BatteryPowered", "BatteryVoltage": -1, "ChargeVoltage": -1, "ChargeCurrent": -1, "PhoneCurrent": -1, "BatteryTemperature": -1, "PhoneTemperature": -1, "BatteryCapacity": -1}`
+
+ - **sms2mqtt/network**: A payload with network information is published for each change
+ E.g. `{"NetworkName": "", "State": "HomeNetwork", "PacketState": "HomeNetwork", "NetworkCode": "392 11", "CID": "74C5", "PacketCID": "74C5", "GPRS": "Attached", "PacketLAC": "8623", "LAC": "8623"}`
+
+ - **sms2mqtt/connected**: Connection status (1 = Connected / 0 = Disconnected)
+ E.g. `1`
 
 # Troubleshoot
 ## Logs
