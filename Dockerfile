@@ -1,6 +1,6 @@
 FROM python:3.6.13-alpine3.12
 
-RUN apk add --no-cache gammu-dev
+RUN apk add --no-cache gammu-dev tzdata
 
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
      && pip install python-gammu paho-mqtt \
