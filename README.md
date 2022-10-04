@@ -58,6 +58,7 @@ services:
 
 #### Environment variables
 * `PIN`: **Optional**, Pin code of your SIM
+* `GAMMUOPTION`: **Optional**, Allow to add a specific line in gammu configuration (ex : 'atgen_setcnmi = 1,2,0,0')
 * `MOREINFO`: **Optional**, Add more topics about your GSM device (battery and network)
 * `HEARTBEAT`: **Optional**, Enable the heartbeat topic
 * `HOST`: IP address or hostname of your MQTT broker
