@@ -213,6 +213,7 @@ if __name__ == "__main__":
 
     device = os.getenv("DEVICE","/dev/mobile")
     pincode = os.getenv("PIN")
+    gammuoption = os.getenv("GAMMUOPTION")
     moreinfo = bool(os.getenv("MOREINFO"))
     heartbeat = bool(os.getenv("HEARTBEAT"))
     mqttprefix = os.getenv("PREFIX","sms2mqtt")
@@ -230,6 +231,7 @@ if __name__ == "__main__":
 [gammu]
 device = {device}
 connection = at
+{gammuoption}
 """)
     gammurcfile.close()
 
