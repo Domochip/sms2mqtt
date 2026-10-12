@@ -99,7 +99,7 @@ Received SMS are published to topic **sms2mqtt/received** like this :
 - **sms2mqtt/signal**: A signal quality payload is published when quality changes  
  E.g. `{"SignalStrength": -71, "SignalPercent": 63, "BitErrorRate": -1}`
 
-### Additionnal topics (enabled using MOREINFO flag)
+### Additional topics (enabled using MOREINFO flag)
  - **sms2mqtt/battery**: A battery payload with status and charge is published when it changes  
  E.g. `{"BatteryPercent": 100, "ChargeState": "BatteryPowered", "BatteryVoltage": -1, "ChargeVoltage": -1, "ChargeCurrent": -1, "PhoneCurrent": -1, "BatteryTemperature": -1, "PhoneTemperature": -1, "BatteryCapacity": -1}`
 

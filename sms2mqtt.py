@@ -9,27 +9,33 @@ import json
 
 
 # callback when the broker responds to our connection request.
-def on_mqtt_connect(client, userdata, flags, rc):
+def on_mqtt_connect(client, userdata, flags, reasonCode, properties=None):
     logging.info("Connected to MQTT host")
     client.publish(f"{mqttprefix}/connected", "1", 0, True)
     client.subscribe(f"{mqttprefix}/send")
 
+# set to True by on_mqtt_disconnect so the main loop can exit cleanly.
+# Calling exit() (SystemExit) from inside a paho callback is not safe: the
+# library only catches Exception, so SystemExit propagates through loop() and
+# crashes the process with a traceback.
+should_exit = False
+
 # callback when the client disconnects from the broker.
-def on_mqtt_disconnect(client, userdata, rc):
+def on_mqtt_disconnect(client, userdata, disconnect_flags, reasonCode, properties=None):
     logging.info("Disconnected from MQTT host")
-    logging.info("Exit")
-    exit()
+    global should_exit
+    should_exit = True
 
 # callback when a message has been received on a topic that the client subscribes to.
-def on_mqtt_message(client, userdata, msg):
+def on_mqtt_message(client, userdata, message):
     try:
-        logging.info(f'MQTT received : {msg.payload}')
-        payload = msg.payload.decode("utf-8")
+        logging.info(f'MQTT received : {message.payload}')
+        payload = message.payload.decode("utf-8")
         data = json.loads(payload, strict=False)
     except Exception as e:
         feedback = {"result":f'error : failed to decode JSON ({e})', "payload":payload}
         client.publish(f"{mqttprefix}/sent", json.dumps(feedback, ensure_ascii=False))
-        logging.error(f'failed to decode JSON ({e}), payload: {msg.payload}')
+        logging.error(f'failed to decode JSON ({e}), payload: {message.payload}')
         return
 
     for key, value in data.items():
@@ -192,9 +198,9 @@ def shutdown(signum=None, frame=None):
 
 
 if __name__ == "__main__":
-    logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
+    logging.basicConfig( format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
 
-    versionnumber='1.4.6'
+    versionnumber='1.4.7'
 
     logging.info(f'===== sms2mqtt v{versionnumber} =====')
 	
@@ -254,7 +260,9 @@ connection = at
 
     logging.info('Gammu initialized')
 
-    client = mqtt.Client(mqttclientid)
+    client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2, 
+                    client_id=mqttclientid,
+                    protocol=mqtt.MQTTv5)
     client.username_pw_set(mqttuser, mqttpassword)
     client.on_connect = on_mqtt_connect
     client.on_disconnect = on_mqtt_disconnect
@@ -272,3 +280,6 @@ connection = at
         if heartbeat:
             get_datetime()
         client.loop()
+        if should_exit:
+            break
+
